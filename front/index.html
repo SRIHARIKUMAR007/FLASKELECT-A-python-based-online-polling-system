@@ -1,1 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Nadu E-Voting Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Flag_of_Tamil_Nadu.svg" alt="https://upload.wikimedia.org/wikipedia/commons/1/1f/Flag_of_Tamil_Nadu.svg/40/40">
+                <h1>Tamil Nadu E-Voting Portal</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#register" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
+                    <li><a href="#verify-vote" class="nav-link"><i class="fas fa-check-circle"></i> Verify Vote</a></li>
+                    <li><a href="#results" class="nav-link"><i class="fas fa-chart-bar"></i> Results</a></li>
+                    <li><a href="#admin" class="nav-link"><i class="fas fa-lock"></i> Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="status-message" class="status-message" style="display: none;"></div>
+   <!-- Main Content -->
+    <main class="container">
+        <section id="home" class="page active">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-vote-yea"></i>
+                    <h2>Voter Verification</h2>
+                </div>
+                <p class="section-description">Enter your registered phone number to proceed with voting</p>
+                
+                <div class="input-group">
+                    <label for="phone-input">Phone Number</label>
+                    <input type="tel" id="phone-input" class="modern-input" placeholder="Enter your phone number" maxlength="10">
+                </div>
 
+                <button id="verify-button" class="primary-button">
+                    <i class="fas fa-paper-plane"></i> Get Verification Code
+                </button>
+                
+                <div class="info-text">
+                    <p>Not registered yet? <a href="#register" class="text-link">Register here</a></p>
+                </div>
+            </div>
+        </section>
+        <section id="register" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h2>Voter Registration</h2>
+                </div>
+                <p class="section-description">Complete the form below to register as a voter</p>
+                
+                <div class="input-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" class="modern-input" placeholder="Enter your full name">
+                </div>
+
+                <div class="input-group">
+                    <label for="aadhar-number">Aadhar Number</label>
+                    <input type="text" id="aadhar-number" class="modern-input" placeholder="12-digit Aadhar number" maxlength="12">
+                </div>
+
+                <div class="input-group">
+                    <label for="phone-registration">Phone Number</label>
+                    <input type="tel" id="phone-registration" class="modern-input" placeholder="Enter your phone number" maxlength="10">
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="modern-input" placeholder="Enter your email address">
+                </div>
+
+                <button id="register-button" onclick="registerVoter()" class="primary-button">
+                    <i class="fas fa-user-check"></i> Register
+                </button>
+                
+                <div class="info-text">
+                    <p>Already registered? <a href="#home" class="text-link">Go to verification</a></p>
+                </div>
+            </div>
+        </section>
+        <section id="email-verification" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-envelope"></i>
+                    <h2>OTP Verification</h2>
+                </div>
+                <p class="section-description">Enter the 6-digit code sent to your email</p>
+                
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                    <input type="text" class="otp-input" maxlength="1" inputmode="numeric">
+                </div>
+
+                <div class="countdown-container">
+                    <p id="countdown">Resend code in: 01:30</p>
+                    <button id="resend-button" class="text-button" disabled>
+                        <i class="fas fa-sync-alt"></i> Resend Code
+                    </button>
+                </div>
+
+                <button id="verify-email-button" onclick="verifyEmailOTP()" class="primary-button">
+                    <i class="fas fa-check-circle"></i> Verify
+                </button>
+            </div>
+        </section>
+        <section id="vote" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-vote-yea"></i>
+                    <h2>Cast Your Vote</h2>
+                </div>
+                <p class="section-description">Select your preferred candidate</p>
+                
+                <div id="candidates-container" class="candidates-grid">
+                    <!-- Candidates will be loaded dynamically -->
+                </div>
+                
+                <div class="voting-instructions">
+                    <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+                    <ul>
+                        <li>Click on the VOTE button next to your chosen candidate</li>
+                        <li>Your vote is anonymous and secure</li>
+                        <li>You can vote only once</li>
+                        <li>Verify your vote later using the verification code</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section id="verify-vote" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-search"></i>
+                    <h2>Verify Your Vote</h2>
+                </div>
+                <p class="section-description">Enter your vote verification code to confirm your vote has been counted</p>
+                
+                <div class="input-group">
+                    <label for="verification-code-input">Verification Code</label>
+                    <input type="text" id="verification-code-input" class="modern-input" placeholder="Enter 6-digit code" maxlength="6">
+                </div>
+
+                <button onclick="verifyVote()" class="primary-button">
+                    <i class="fas fa-check-double"></i> Verify Vote
+                </button>
+                
+                <div id="verification-result" class="verification-result" style="display: none;">
+                    <!-- Results will appear here -->
+                </div>
+            </div>
+        </section>
+        <section id="results" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-chart-bar"></i>
+                    <h2>Election Results</h2>
+                </div>
+                <p class="section-description">Live election results and statistics</p>
+                
+                <div class="results-stats">
+                    <div class="stat-card">
+                        <h3>Registered Voters</h3>
+                        <p id="total-voters">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Votes</h3>
+                        <p id="total-votes">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Voting Percentage</h3>
+                        <p id="voting-percentage">0%</p>
+                    </div>
+                </div>
+                
+                <div id="results-container" class="results-list">
+                    <!-- Results will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+        <section id="admin" class="page">
+            <div class="voting-section glassmorphism">
+                <div class="section-header">
+                    <i class="fas fa-user-shield"></i>
+                    <h2>Admin Panel</h2>
+                </div>
+                
+                <!-- Admin Login Form -->
+                <div id="admin-login-form">
+                    <p class="section-description">Administrator access only</p>
+                    
+                    <div class="input-group">
+                        <label for="admin-username">Username</label>
+                        <input type="text" id="admin-username" class="modern-input" placeholder="Admin username">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" class="modern-input" placeholder="Admin password">
+                    </div>
+
+                    <button onclick="adminLogin()" class="primary-button">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </div>
+                
+                <!-- Admin Dashboard (Initially Hidden) -->
+                <div id="admin-dashboard" style="display: none;">
+                    <div class="admin-header">
+                        <h3>Election Administration Dashboard</h3>
+                        <button onclick="adminLogout()" class="secondary-button">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                    
+                    <div class="admin-tabs">
+                        <button class="tab-button active" data-tab="results">Results</button>
+                        <button class="tab-button" data-tab="voters">Registered Voters</button>
+                        <button class="tab-button" data-tab="settings">Settings</button>
+                    </div>
+                    
+                    <div class="admin-content">
+                        <!-- Results Tab Content -->
+                        <div class="tab-content active" id="tab-results">
+                            <div class="results-stats">
+                                <div class="stat-card">
+                                    <h3>Registered Voters</h3>
+                                    <p id="admin-total-voters">0</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Total Votes</h3>
+                                    <p id="admin-total-votes">0</p>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Voting Percentage</h3>
+                                    <p id="admin-voting-percentage">0%</p>
+                                </div>
+                            </div>
+                            
+                            <div id="admin-results" class="results-list">
+                                <!-- Results will be loaded dynamically -->
+                            </div>
+                        </div>
+                        
+                        <!-- Voters Tab Content -->
+                        <div class="tab-content" id="tab-voters">
+                            <div class="voter-search">
+                                <input type="text" class="modern-input" placeholder="Search voters...">
+                                <button class="primary-button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="voters-table-container">
+                                <table class="voters-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Verified</th>
+                                            <th>Voted</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="voters-list">
+                                        <!-- Voters will be loaded dynamically -->
+                                        <tr>
+                                            <td colspan="5" class="empty-message">No registered voters yet</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Settings Tab Content -->
+                        <div class="tab-content" id="tab-settings">
+                            <div class="settings-section">
+                                <h3>Election Settings</h3>
+                                
+                                <div class="setting-item">
+                                    <label class="toggle-label">
+                                        <span>Enable Voting</span>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="setting-item">
+                                    <label class="toggle-label">
+                                        <span>Show Live Results</span>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="setting-item">
+                                    <label class="toggle-label">
+                                        <span>Allow Registration</span>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <button class="primary-button save-btn">
+                                    <i class="fas fa-save"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Tamil Nadu E-Voting Portal</h3>
+                </div>
+                <p>© 2025 Election Commission of Tamil Nadu. All rights reserved.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Help & Support</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</body>
+</html>
